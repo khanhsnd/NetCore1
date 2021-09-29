@@ -12,15 +12,18 @@ namespace CompanyEmployees.Controllers
     public class WeatherForecastController : ControllerBase
     {
         private ILoggerManager _logger;
-        public WeatherForecastController(ILoggerManager logger)
+        private readonly IRepositoryManager _repositoryManager;
+        public WeatherForecastController(ILoggerManager logger, IRepositoryManager repositoryManager)
         {
             _logger = logger;
+            _repositoryManager = repositoryManager;
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<string>> Get()
         {
             _logger.LogInfo("Test log info");
+            //
             return new string[] { "value1", "value2" };
         }
     }

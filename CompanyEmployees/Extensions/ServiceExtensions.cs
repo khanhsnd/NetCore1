@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Repository;
 
 namespace CompanyEmployees.Extensions
 {
@@ -31,5 +32,9 @@ namespace CompanyEmployees.Extensions
             services.AddScoped<ILoggerManager, LoggerManager>();
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)=>
             services.AddDbContext<RepositoryContext>(opts=>opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+        public static void ConfigureRepositoryManager(this IServiceCollection services)
+        {
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
+        }
     }
 }
