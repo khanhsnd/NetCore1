@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Contracts;
+using Entities.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,28 +16,35 @@ namespace CompanyEmployees.Controllers
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;
-        public CompaniesController(IRepositoryManager repositoryManager, ILoggerManager loggerManager)
+        private readonly IMapper _mapper;
+        public CompaniesController(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _loggerManager = loggerManager;
+            _mapper = mapper;
         }
         [HttpGet]
         public IActionResult GetCompanies()
         {
-            try
+            var companies = _repositoryManager.Company.GetAllCompanies(false).Select(x => new
             {
-                var companies = _repositoryManager.Company.GetAllCompanies(false).Select(x => new
-                {
-                    x.Id,
-                    x.Name
-                }).ToList();
-                return Ok(companies);
-            }
-            catch (Exception ex)
+                x.Id,
+                x.Name
+            }).ToList();
+            var companiesDTO = _mapper.Map<IEnumerable<CompanyDTO>>(companies);
+            return Ok(companiesDTO);
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetCompany(Guid id)
+        {   
+            
+            var company = _repositoryManager.Company.GetCompany(id, false);
+            if(company == null)
             {
-                _loggerManager.LogError($"Something went wrong in the {nameof(GetCompanies)} action {ex}");
-                return StatusCode(500, "Oops");
+                _loggerManager.LogError("Company not exist");
+                return NotFound();
             }
+            return Ok(company);
         }
     }
 }

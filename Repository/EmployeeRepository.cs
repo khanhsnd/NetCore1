@@ -13,5 +13,10 @@ namespace Repository
         {
                 
         }
+        public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges)
+        {
+            var result = FindByCondition(x => x.CompanyId.Equals(companyId), trackChanges);
+            return result;
+        }
     }
 }
