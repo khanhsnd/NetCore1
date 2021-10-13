@@ -1,10 +1,12 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -14,13 +16,13 @@ namespace Repository
         {
 
         }
-        public IEnumerable<Company>GetAllCompanies(bool trackChanges)
+        public async Task<IEnumerable<Company>> GetAllCompanies(bool trackChanges)
         {
-            return FindAll(trackChanges).OrderBy(x => x.Name).ToList();
+            return await FindAll(trackChanges).OrderBy(x => x.Name).ToListAsync();
         }
-        public Company GetCompany(Guid companyId, bool trackChanges)
+        public async Task<Company> GetCompany(Guid companyId, bool trackChanges)
         {
-            var result = FindByCondition(c => c.Id.Equals(companyId), trackChanges).SingleOrDefault();
+            var result =await FindByCondition(c => c.Id.Equals(companyId), trackChanges).SingleOrDefaultAsync();
             return result;
         }
     }

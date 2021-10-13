@@ -31,7 +31,7 @@ namespace CompanyEmployees.Controllers
                 _loggerManager.LogError("Company not exist");
                 return NotFound();
             }
-            var employees = _repositoryManager.Employee.GetEmployees(company.Id, false);
+            var employees = _repositoryManager.Employee.GetEmployees(companyId, false);
             return Ok(employees);
         }
     }
