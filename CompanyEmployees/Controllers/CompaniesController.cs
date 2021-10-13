@@ -24,21 +24,17 @@ namespace CompanyEmployees.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetCompanies()
+        public async Task<IActionResult > GetCompanies()
         {
-            var companies = _repositoryManager.Company.GetAllCompanies(false).Select(x => new
-            {
-                x.Id,
-                x.Name
-            }).ToList();
+            var companies = await _repositoryManager.Company.GetAllCompanies(false);
             var companiesDTO = _mapper.Map<IEnumerable<CompanyDTO>>(companies);
             return Ok(companiesDTO);
         }
         [HttpGet("{id}")]
-        public IActionResult GetCompany(Guid id)
+        public async Task<IActionResult> GetCompany(Guid id)
         {   
             
-            var company = _repositoryManager.Company.GetCompany(id, false);
+            var company = await _repositoryManager.Company.GetCompany(id, false);
             if(company == null)
             {
                 _loggerManager.LogError("Company not exist");
